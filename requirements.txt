@@ -1,0 +1,4 @@
+awscli==1.11.85
+boto==2.46.1
+Fabric==1.13.2
+termcolor==1.1.0
