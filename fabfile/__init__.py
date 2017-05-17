@@ -91,9 +91,12 @@ def download(prefix):
             logger.info(src_path)
             if os.path.splitext(src_path)[1].lower() in GZIP_FILE_TYPES:
                 with tempfile.TemporaryFile() as temp:
-                    with gzip.open(src_path, 'rb') as f:
-                        file_content = f.read()
-                        temp.write(file_content)
-                    temp.seek(0)
-                    with open(src_path, 'wb') as fout:
-                        fout.write(temp.read())
+                    try:
+                        with gzip.open(src_path, 'rb') as f:
+                            file_content = f.read()
+                            temp.write(file_content)
+                        temp.seek(0)
+                        with open(src_path, 'wb') as fout:
+                            fout.write(temp.read())
+                    except IOError:
+                        pass
