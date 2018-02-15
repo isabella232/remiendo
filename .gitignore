@@ -1,3 +1,6 @@
 */
 !fabfile/
+!pym-patched/
+data/
+!data/.placeholder
 *.pyc

@@ -8,6 +8,7 @@ import hashlib
 import logging
 import mimetypes
 import os
+from fabric.api import task
 
 from boto.s3.key import Key
 
@@ -19,6 +20,25 @@ logger = logging.getLogger(__name__)
 logger.setLevel(app_config.LOG_LEVEL)
 
 GZIP_FILE_TYPES = ['.html', '.js', '.json', '.css', '.xml']
+
+
+@task
+def bulk_deploy_patched_pym(file):
+    """
+    Deploy a single file to S3, if the local version is different.
+    """
+
+    bucket = utils.get_bucket(app_config.PRODUCTION_S3_BUCKET)
+    with open('data/%s' % file, 'r') as f:
+        for line in f:
+            logger.info(line.strip())
+            deploy_file(bucket,
+                        'pym-patched/pym.js',
+                        'dailygraphics/graphics/%s/js/lib/pym.js' % (
+                            line.strip()),
+                        headers={
+                            'Cache-Control': 'max-age=%i' % 86400
+                        })
 
 
 def deploy_file(bucket, src, dst, headers={}, public=True):
